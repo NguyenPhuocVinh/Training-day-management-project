@@ -16,6 +16,7 @@ export class AuthController {
             const { accessToken, refreshToken } = await AuthService.userLogin(loginReqBody);
             res.status(StatusCodes.OK).json({ accessToken, refreshToken });
         } catch (error: any) {
+            console.log(error);
             res.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
 
         }

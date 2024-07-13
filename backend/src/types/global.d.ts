@@ -95,12 +95,19 @@ interface IProgram {
     status: string
     point: Number
     isMinus: Boolean
-    adminId: ObjectId
-    categoryId: ObjectId
+    adminId: any
+    categoryId: any
 }
 
 // * Quiz
 interface IQuiz {
     quizName: string
     time: Time
+}
+
+// * Participation
+interface IParticipation {
+    userId: any
+    programId: any
+    status: string
 }

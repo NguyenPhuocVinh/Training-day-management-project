@@ -24,6 +24,11 @@ const UserSchema = new Schema<UserDocument>({
         required: true,
         unique: true
     },
+    password: {
+        type: String,
+        required: true,
+        select: false
+    },
     birthDay: {
         type: Date,
         required: true

@@ -10,33 +10,48 @@ import { TokenService } from './token.service'
 import { TokenModel } from '../models/token.model'
 import { IUser } from '../types/global'
 import { EmailService } from './email.service'
+import { hash } from 'crypto'
 
 export class AuthService {
     static async userLogin({ MSSV, password }: LoginReqBody) {
-        const user = await User.findOne({} as any).or([{ MSSV }, { email: MSSV }])
-        if (!user) throw new ApiError(StatusCodes.NOT_FOUND, 'Wrong MSSV or email')
-        const isMatch = await bcrypt.compare(password, user.password)
-        if (!isMatch) throw new ApiError(StatusCodes.UNAUTHORIZED, 'Wrong password')
-        const accessToken = await TokenService.SignAccessToken({ _id: user._id })
-        const refreshToken = await TokenService.SignRefreshToken({ _id: user._id })
-        const token = await TokenService.SaveUserToken({
+        // Find the user by MSSV and select the password
+        const user = await User.findOne({ MSSV }).select('+password');
+        if (!user) {
+            throw new ApiError(StatusCodes.NOT_FOUND, 'User not found with this MSSV');
+        }
+
+        // Compare the provided password with the stored hashed password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            throw new ApiError(StatusCodes.UNAUTHORIZED, 'Invalid password');
+        }
+
+        // Generate access and refresh tokens
+        const accessToken = await TokenService.SignAccessToken({ _id: user._id });
+        const refreshToken = await TokenService.SignRefreshToken({ _id: user._id });
+
+        // Save the refresh token with an expiration time
+        await TokenService.SaveUserToken({
             userId: user._id,
             token: refreshToken,
             type: 'refresh_token',
-            expiresTime: moment().add(14, 'days').toDate()
-        })
-        return { accessToken, refreshToken }
+            expiresTime: moment().add(14, 'days').toDate(),
+        });
+
+        return { accessToken, refreshToken };
     }
 
     static async userRegister(registerReqBody: IUser) {
-        const MSSV = registerReqBody.MSSV
+        console.log(registerReqBody)
+        const { MSSV, password } = registerReqBody
         const existedUser = await User.findOne({ MSSV })
         if (existedUser) throw new ApiError(StatusCodes.CONFLICT, 'User is existed')
-        const hassedPassword = await bcrypt.hash(registerReqBody.password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log(hashedPassword)
         await User.create(
             {
                 ...registerReqBody,
-                password: hassedPassword,
+                password: hashedPassword
             }
         )
         return { message: 'Register success' }

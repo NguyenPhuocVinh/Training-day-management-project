@@ -15,6 +15,7 @@ export class ProgramController {
                 return res.status(StatusCodes.BAD_REQUEST).json({ error: err.message });
             }
             try {
+                const adminId = req.user._id as string;
                 const createProgramRequest: IProgram = req.body;
                 if (!createProgramRequest) {
                     throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid request');
@@ -29,6 +30,7 @@ export class ProgramController {
                     throw new Error("Failed to upload image to Cloudinary");
                 }
                 createProgramRequest.image = uploadedImage.url;
+                createProgramRequest.adminId = adminId;
                 const program = await ProgramService.create(createProgramRequest);
                 fs.unlinkSync(imagePath);
                 res.status(StatusCodes.CREATED).json({ program });

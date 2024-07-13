@@ -6,6 +6,7 @@ import programRouter from './program.route'
 import rbacRoute from './rbac.route'
 import adminRoute from './admin.route'
 import categoryRouter from './category.route'
+import participationRouter from './participation.route'
 import { authMiddleware } from '../../middlewares/auth.middleware'
 const apiRouter = express.Router()
 
@@ -16,5 +17,6 @@ apiRouter.use('/admin', adminRoute)
 apiRouter.use('/program', authMiddleware, programRouter)
 apiRouter.use('/rbac', rbacRoute)
 apiRouter.use('/category', authMiddleware, categoryRouter)
+apiRouter.use('/participation', authMiddleware, participationRouter)
 
 export default apiRouter
