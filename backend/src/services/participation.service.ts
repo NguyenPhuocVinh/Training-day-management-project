@@ -47,54 +47,6 @@ export class ParticipationService {
 
     }
 
-    // static async create(participation: IParticipation) {
-    //     const { programId, userId } = participation;
-
-    //     // Fetch the program details
-    //     const program = await ProgramService.getProgramById(programId);
-
-    //     // Check program status
-    //     if (program?.status === 'rejected' || program?.status === 'pending') {
-    //         throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is not approved yet');
-    //     }
-
-    //     // Check program capacity
-    //     if (program?.quantity === 0) {
-    //         throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is full');
-    //     }
-
-    //     const today = new Date();
-    //     const registerDate = new Date(program?.registerDate);
-    //     const endRegisterDate = new Date(program?.endRegisterDate);
-
-    //     // Validate registration dates
-    //     if (registerDate > today || endRegisterDate < today) {
-    //         throw new ApiError(StatusCodes.BAD_REQUEST, 'Registration date is over');
-    //     }
-
-    //     // Check existing participation
-    //     const participationCheck = await Participation.findOne({ userId, programId });
-
-    //     if (participationCheck) {
-    //         if (participationCheck.status === 'success') {
-    //             throw new ApiError(StatusCodes.BAD_REQUEST, 'Participation already created');
-    //         }
-
-    //         if (participationCheck.status === 'cancel') {
-    //             participationCheck.status = 'success';
-    //             await Participation.updateOne({ userId, programId }, participationCheck);
-    //         }
-    //     } else {
-    //         // Decrement program quantity and create participation
-    //         program.quantity -= 1;
-    //         await ProgramService.update(programId, program);
-    //         await Participation.create(participation);
-    //     }
-
-    //     return { message: 'Participation created successfully' };
-    // }
-
-
     static async cancel(userId: string, programId: string) {
 
         const participationCheck = await Participation.findOne({ userId, programId });
