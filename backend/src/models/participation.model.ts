@@ -7,18 +7,22 @@ const ParticipationSchema = new Schema<ParticipationDocument>({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
     },
     programId: {
         type: Schema.Types.ObjectId,
         ref: 'Program',
-        required: true
+        required: true,
     },
     status: {
         type: String,
         default: 'success',
-        enum: ['success', 'cancel']
-    }
-}, { timestamps: true })
+        enum: ['success', 'cancel'],
+    },
+    qrCode: {
+        type: String,
+        required: true
+    },
+}, { timestamps: true });
 
 export const Participation = model<ParticipationDocument>('Participation', ParticipationSchema)

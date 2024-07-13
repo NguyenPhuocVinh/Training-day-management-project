@@ -2,19 +2,19 @@ import { StatusCodes } from 'http-status-codes'
 import { ApiError } from '../utils/api-error.util'
 import { Program } from '../models/program.model'
 import { IProgram } from '../types/global'
-import moment from 'moment'
 
+
+const isValidQuantity = (value: number): boolean => value > 0;
+
+const validateDate = (date: Date, referenceDate: Date, errorMessage: string): void => {
+    if (date < referenceDate) {
+        throw new ApiError(StatusCodes.BAD_REQUEST, errorMessage);
+    }
+};
 
 export class ProgramService {
     static async create(program: IProgram) {
         const { quantity, registerDate, endRegisterDate, startDate } = program;
-
-        const isValidQuantity = (value: number) => value > 0;
-        const isValidDate = (date: Date, referenceDate: Date, errorMessage: string) => {
-            if (date < referenceDate) {
-                throw new ApiError(StatusCodes.BAD_REQUEST, errorMessage);
-            }
-        };
 
         if (!isValidQuantity(quantity as number)) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Quantity must be greater than 0');
@@ -22,9 +22,9 @@ export class ProgramService {
 
         const today = new Date();
 
-        isValidDate(registerDate, today, 'Register date must be greater than today');
-        isValidDate(endRegisterDate, registerDate, 'End register date must be greater than register date');
-        isValidDate(startDate, endRegisterDate, 'Start date must be greater than end register date');
+        validateDate(registerDate, today, 'Register date must be greater than today');
+        validateDate(endRegisterDate, registerDate, 'End register date must be greater than register date');
+        validateDate(startDate, endRegisterDate, 'Start date must be greater than end register date');
 
         return await Program.create(program);
     }
@@ -59,4 +59,5 @@ export class ProgramService {
     static async getProgramById(programId: string) {
         return await Program.findById(programId)
     }
+
 }

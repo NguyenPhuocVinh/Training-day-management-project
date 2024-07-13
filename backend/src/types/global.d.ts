@@ -110,4 +110,11 @@ interface IParticipation {
     userId: any
     programId: any
     status: string
+    qrCode: string
+}
+
+interface IAttendance {
+    participationId: any
+    checkIn: Date
+    checkOut: Date
 }
