@@ -35,7 +35,6 @@ const TokenSchema = new Schema<TokenDocument>({
 TokenSchema.method('checkExpires', function checkExpires() {
     const expiresTimeDate = moment(this.expiresTime).toDate();
     const checkDate = moment().isBefore(expiresTimeDate);
-    console.log(checkDate);
     return checkDate
 })
 

@@ -111,8 +111,19 @@ interface IParticipation {
     programId: any
     status: string
     qrCode: string
+    penalized: Boolean
+    pointsRewarded: Boolean
 }
 
+// * PointTransaction
+interface IPointTransaction {
+    participationId: any
+    point: Number
+    type: string
+    description: string
+}
+
+// * Attendance
 interface IAttendance {
     participationId: any
     checkIn: Date

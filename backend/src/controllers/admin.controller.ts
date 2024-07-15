@@ -1,11 +1,11 @@
-import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { ApiError } from '../utils/api-error.util';
-import { AdminService } from '../services/admin.service';
-import { IAdmin } from '../types/global';
+import { Request, Response } from 'express'
+import { StatusCodes } from 'http-status-codes'
+import { ApiError } from '../utils/api-error.util'
+import { AdminService } from '../services/admin.service'
+import { IAdmin } from '../types/global'
 import {
-    LoginAdminReqBody,
-} from '../types/request/auth.request';
+    LoginAdminReqBody
+} from '../types/request/auth.request'
 
 export class AdminControler {
     static async adminRegister(req: Request, res: Response) {

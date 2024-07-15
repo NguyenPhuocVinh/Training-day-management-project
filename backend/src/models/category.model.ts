@@ -9,7 +9,7 @@ const CategorySchema = new Schema<CategoryDocument>({
         type: String,
         required: true,
         unique: true,
-        enum: ['Quiz', 'Attendance', 'Propose']
+        enum: ['quiz', 'attendance', 'propose']
     },
     isPropose: {
         type: Boolean,

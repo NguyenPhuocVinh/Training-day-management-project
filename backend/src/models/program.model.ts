@@ -1,12 +1,12 @@
 import mongoose, { Schema, Document, model } from 'mongoose'
 import { IProgram } from '../types/global'
 import validator from 'validator'
-import { ApiError } from '../utils/api-error.util'
-import { StatusCodes } from 'http-status-codes'
+
 
 interface ProgramDocument extends IProgram, Document {
-    // validateProgram(): void;
-    // checkRegistrationDates(): void;
+    validateProgram(): boolean;
+    checkRegistrationDates(): boolean;
+    isAttendanceCategory(categoryId: any): boolean;
 }
 
 const ProgramSchema = new Schema<ProgramDocument>({
@@ -67,23 +67,30 @@ const ProgramSchema = new Schema<ProgramDocument>({
     }
 }, { timestamps: true });
 
-// ProgramSchema.methods.validateProgram = function () {
-//     if (this.status === 'rejected' || this.status === 'pending') {
-//         throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is not approved yet');
+// ProgramSchema.method('validateProgram', function validateProgram() {
+//     if (!this || this.status === 'rejected' || this.status === 'pending') {
+//         return false;
 //     }
 //     if (this.quantity === 0) {
-//         throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is full');
+//         return false;
 //     }
-// };
+//     return true;
+// }
+// );
 
-// ProgramSchema.methods.checkRegistrationDates = function () {
+// ProgramSchema.method('checkRegistrationDates', function checkRegistrationDates() {
 //     const today = new Date();
 //     const registerDate = new Date(this.registerDate);
 //     const endRegisterDate = new Date(this.endRegisterDate);
 
 //     if (registerDate > today || endRegisterDate < today) {
-//         throw new ApiError(StatusCodes.BAD_REQUEST, 'Register date is over');
+//         return false;
 //     }
-// };
+//     return true;
+// });
+
+ProgramSchema.method('isAttendanceCategory', function isAttendanceCategory(categoryId: any) {
+    return this.categoryId.equals(categoryId);
+});
 
 export const Program = model<ProgramDocument>('Program', ProgramSchema)

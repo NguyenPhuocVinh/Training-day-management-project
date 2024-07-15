@@ -1,8 +1,8 @@
-import mongoose, { Schema, Document, model } from 'mongoose'
-import { IParticipation } from '../types/global'
-import validator from 'validator'
+import mongoose, { Schema, Document, model } from 'mongoose';
+import { IParticipation } from '../types/global';
 
 interface ParticipationDocument extends IParticipation, Document { }
+
 const ParticipationSchema = new Schema<ParticipationDocument>({
     userId: {
         type: Schema.Types.ObjectId,
@@ -23,6 +23,14 @@ const ParticipationSchema = new Schema<ParticipationDocument>({
         type: String,
         required: true
     },
+    penalized: {
+        type: Boolean,
+        default: false
+    },
+    pointsRewarded: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true });
 
-export const Participation = model<ParticipationDocument>('Participation', ParticipationSchema)
+export const Participation = model<ParticipationDocument>('Participation', ParticipationSchema);

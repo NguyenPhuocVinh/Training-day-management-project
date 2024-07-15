@@ -1,7 +1,12 @@
 import mongoose, { Schema, Document, model } from 'mongoose';
 import { IUser } from '../../types/global';
 
-interface UserDocument extends IUser, Document { }
+interface UserDocument extends IUser, Document {
+    attendanceRecord: {
+        checkIn: Date;
+        checkOut: Date;
+    };
+}
 
 // * Hàm setter cho trường gender
 const genderSetter = (value: string | boolean): number => {
@@ -42,7 +47,8 @@ const UserSchema = new Schema<UserDocument>({
     point: {
         type: Number,
         required: true,
-        default: 0
+        default: 0,
+        select: false
     },
     classId: {
         type: Schema.Types.ObjectId,

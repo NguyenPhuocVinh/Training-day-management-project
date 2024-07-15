@@ -12,19 +12,11 @@ const AttendanceSchema = new Schema<AttendanceDocument>({
     },
     checkIn: {
         type: Date,
-        required: true,
-        validate: {
-            validator: (value: Date) => validator.isDate(value.toISOString()),
-            message: 'Invalid check-in date format'
-        }
+        required: true
+
     },
     checkOut: {
-        type: Date,
-        required: true,
-        validate: {
-            validator: (value: Date) => validator.isDate(value.toISOString()),
-            message: 'Invalid check-out date format'
-        }
+        type: Date
     }
 }, { timestamps: true });
 

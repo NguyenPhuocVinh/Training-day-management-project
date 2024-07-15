@@ -29,4 +29,33 @@ export class ParticipationController {
 
         }
     }
+
+    static async getNonParticipants(req: Request, res: Response) {
+        try {
+            const programId = req.query.programId
+            const nonParticipants = await ParticipationService.getNonParticipants(programId)
+            res.status(StatusCodes.OK).json({ nonParticipants })
+        } catch (error: any) {
+            res.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+        }
+    }
+
+    static async getAllParticipations(req: Request, res: Response) {
+        try {
+            const participations = await ParticipationService.getAllParticipations();
+            res.status(StatusCodes.OK).json({ participations });
+        } catch (error: any) {
+            res.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+        }
+    }
+
+    static async getParticipants(req: Request, res: Response) {
+        try {
+            const programId = req.query.programId
+            const participants = await ParticipationService.getParticipants(programId)
+            res.status(StatusCodes.OK).json({ participants })
+        } catch (error: any) {
+            res.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message })
+        }
+    }
 }
