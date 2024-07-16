@@ -6,6 +6,8 @@ import { generateQRCode } from '../utils/qrcode.util'
 import { ProgramService } from './program.service'
 import { Attendance } from '../models/attendance.model'
 import { User } from '../models/user/user.model'
+import { Evidence } from '../models/evidence.model'
+import { Program } from '../models/program.model'
 export class ParticipationService {
 
     private static async incrementProgramQuantity(programId: string) {
@@ -146,6 +148,21 @@ export class ParticipationService {
 
 
     static async getParticipants(programId: any) {
+        const program = await Program.findById(programId).populate('categoryId');
+        if (!program) {
+            throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
+        }
+
+        if (program.isAttendanceCategory()) {
+            return this.getAttendanceParticipants(programId);
+        } else if (program.isEvidenceCategory()) {
+            return this.getEvidenceParticipants(programId);
+        } else {
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Program category not recognized');
+        }
+    }
+
+    private static async getAttendanceParticipants(programId: any) {
         const registeredUsers = await Participation.find({ programId, status: 'success' })
             .select('userId')
             .populate('userId');
@@ -158,14 +175,32 @@ export class ParticipationService {
             checkOut: { $ne: null }
         }).distinct('participationId');
 
-        const participants = registeredUsers.filter(participation =>
-            attendedParticipations.some(id => id.toString() === (participation._id as any).toString())
-        ).map(participation => ({
-            participationId: participation._id,
-            user: participation.userId
-        }));
+        return registeredUsers
+            .filter(participation => attendedParticipations.some(id => id.toString() === (participation._id as any).toString()))
+            .map(participation => ({
+                participationId: participation._id,
+                user: participation.userId
+            }));
+    }
 
-        return participants;
+    private static async getEvidenceParticipants(programId: any) {
+        const registeredUsers = await Participation.find({ programId, status: 'success' })
+            .select('userId')
+            .populate('userId');
+
+        const participationIds = registeredUsers.map(participation => participation._id);
+
+        const submittedEvidenceParticipations = await Evidence.find({
+            participationId: { $in: participationIds },
+            status: 'approved'
+        }).distinct('participationId');
+
+        return registeredUsers
+            .filter(participation => submittedEvidenceParticipations.some(id => id.toString() === (participation._id as any).toString()))
+            .map(participation => ({
+                participationId: participation._id,
+                user: participation.userId
+            }));
     }
 
 

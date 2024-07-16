@@ -6,7 +6,6 @@ import fs from 'fs';
 import { singleUpload } from '../utils/upload.util';
 import { ProgramService } from '../services/program.service';
 import { IProgram } from '../types/global';
-import { Program } from '../models/program.model';
 
 export class ProgramController {
     static async create(req: Request, res: Response) {

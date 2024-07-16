@@ -11,8 +11,12 @@ export class AttendanceService {
         if (!program) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
         }
-        if (!program.isAttendanceCategory(program.categoryId)) {
+        if (!program.isAttendanceCategory()) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is not an attendance category');
+        }
+
+        if (program.startDate > new Date()) {
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Program has not started yet');
         }
 
         const participation: any = await ParticipationService.getParticipationIdByUserIdProgramId(userId, programId);
@@ -28,7 +32,7 @@ export class AttendanceService {
         if (!program) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
         }
-        if (!program.isAttendanceCategory(program.categoryId)) {
+        if (!program.isAttendanceCategory()) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is not an attendance category');
         }
 
@@ -56,11 +60,15 @@ export class AttendanceService {
         if (!program) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
         }
-        if (!program.isAttendanceCategory(program.categoryId)) {
+        if (!program.isAttendanceCategory()) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is not an attendance category');
         }
         if (participation.status === 'cancel') {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Participation is cancelled');
+        }
+
+        if (program.startDate > new Date()) {
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Program has not started yet');
         }
 
         return this.createOrUpdateAttendance(participationId, 'checkIn');
@@ -75,7 +83,7 @@ export class AttendanceService {
         if (!program) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
         }
-        if (!program.isAttendanceCategory(program.categoryId)) {
+        if (!program.isAttendanceCategory()) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Program is not an attendance category');
         }
         if (participation.status === 'cancel') {
@@ -101,6 +109,9 @@ export class AttendanceService {
                 { checkOut: date },
                 { new: true }
             );
+            if (!attendance) {
+                throw new ApiError(StatusCodes.BAD_REQUEST, 'Check in first');
+            }
             return attendance;
         }
     }

@@ -1,12 +1,12 @@
-import mongoose, { Schema, Document, model } from 'mongoose'
-import { IProgram } from '../types/global'
-import validator from 'validator'
-
+import mongoose, { Schema, Document, model } from 'mongoose';
+import { IProgram } from '../types/global';
+import validator from 'validator';
 
 interface ProgramDocument extends IProgram, Document {
     validateProgram(): boolean;
     checkRegistrationDates(): boolean;
-    isAttendanceCategory(categoryId: any): boolean;
+    isAttendanceCategory(): boolean;
+    isEvidenceCategory(): boolean;
 }
 
 const ProgramSchema = new Schema<ProgramDocument>({
@@ -26,7 +26,7 @@ const ProgramSchema = new Schema<ProgramDocument>({
         type: Number,
         required: true
     },
-    discription: {
+    description: { // Đã sửa từ 'discription' thành 'description'
         type: String,
         required: true
     },
@@ -67,30 +67,35 @@ const ProgramSchema = new Schema<ProgramDocument>({
     }
 }, { timestamps: true });
 
-// ProgramSchema.method('validateProgram', function validateProgram() {
-//     if (!this || this.status === 'rejected' || this.status === 'pending') {
-//         return false;
-//     }
-//     if (this.quantity === 0) {
-//         return false;
-//     }
-//     return true;
-// }
-// );
-
-// ProgramSchema.method('checkRegistrationDates', function checkRegistrationDates() {
-//     const today = new Date();
-//     const registerDate = new Date(this.registerDate);
-//     const endRegisterDate = new Date(this.endRegisterDate);
-
-//     if (registerDate > today || endRegisterDate < today) {
-//         return false;
-//     }
-//     return true;
-// });
-
-ProgramSchema.method('isAttendanceCategory', function isAttendanceCategory(categoryId: any) {
-    return this.categoryId.equals(categoryId);
+// Định nghĩa phương thức instance 'validateProgram'
+ProgramSchema.method('validateProgram', function validateProgram(this: ProgramDocument) {
+    if (!this || this.status === 'rejected' || this.status === 'pending') {
+        return false;
+    }
+    if (this.quantity === 0) {
+        return false;
+    }
+    return true;
 });
 
-export const Program = model<ProgramDocument>('Program', ProgramSchema)
+// Định nghĩa phương thức instance 'checkRegistrationDates'
+ProgramSchema.method('checkRegistrationDates', function checkRegistrationDates(this: ProgramDocument) {
+    const today = new Date();
+    const registerDate = new Date(this.registerDate);
+    const endRegisterDate = new Date(this.endRegisterDate);
+
+    if (registerDate > today || endRegisterDate < today) {
+        return false;
+    }
+    return true;
+});
+
+ProgramSchema.method('isAttendanceCategory', function isAttendanceCategory(this: ProgramDocument) {
+    return this.categoryId && this.categoryId.categoryName === 'attendance';
+});
+
+ProgramSchema.method('isEvidenceCategory', function isEvidenceCategory(this: ProgramDocument) {
+    return this.categoryId && this.categoryId.categoryName === 'propose';
+});
+
+export const Program = model<ProgramDocument>('Program', ProgramSchema);

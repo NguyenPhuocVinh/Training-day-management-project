@@ -88,7 +88,7 @@ interface IProgram {
     programName: string
     image: string
     quantity: Number
-    discription: string
+    description: string
     registerDate: Date
     endRegisterDate: Date
     startDate: Date
@@ -128,4 +128,15 @@ interface IAttendance {
     participationId: any
     checkIn: Date
     checkOut: Date
+}
+
+// * Evidence
+interface IEvidence {
+    participationId: any
+    image: string
+    submitDate: Date
+    feedback: string
+    feedbackDate: Date
+    status: string
+    feedbackAdminId: any
 }

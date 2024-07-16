@@ -4,10 +4,9 @@ import { IPointTransaction } from '../types/global';
 import { PointTransaction } from '../models/point_transaction.model';
 import { ParticipationService } from './participation.service';
 import { Participation } from '../models/participation.model';
-import { Attendance } from '../models/attendance.model';
+import { Evidence } from '../models/evidence.model';
 import { User } from '../models/user/user.model';
 import { Program } from '../models/program.model';
-
 
 export class PointTransactionService {
     static async create(pointTransactionReq: IPointTransaction) {
@@ -19,7 +18,18 @@ export class PointTransactionService {
         return await PointTransaction.create(pointTransactionReq);
     }
 
-    static async penalizeNonParticipants(participationId: any) {
+    static async penalizeNonParticipants(participationIds: any[]) {
+        const results = [];
+
+        for (const participationId of participationIds) {
+            const result = await PointTransactionService.penalizeSingleParticipant(participationId);
+            results.push(result);
+        }
+
+        return results;
+    }
+
+    private static async penalizeSingleParticipant(participationId: any) {
         const participation = await Participation.findById(participationId);
         if (!participation) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Participation not found');
@@ -36,8 +46,7 @@ export class PointTransactionService {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
         }
 
-        const pointsToDeduct = program.isMinus ? - program.point : program.point;
-        console.log('pointsToDeduct', pointsToDeduct);
+        const pointsToDeduct = program.isMinus ? -program.point : program.point;
 
         const foundParticipant = nonParticipants.find(participant => participant && (participant.participationId as any).toString() === participationId.toString());
         if (!foundParticipant) {
@@ -54,7 +63,6 @@ export class PointTransactionService {
         await PointTransaction.create(pointTransactionReq);
 
         if (foundParticipant.user && foundParticipant.user._id) {
-            console.log('foundParticipant.user._id', foundParticipant.user._id);
             await User.updateOne(
                 { _id: foundParticipant.user._id },
                 { $inc: { point: pointsToDeduct } }
@@ -67,10 +75,25 @@ export class PointTransactionService {
             throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'User ID not found for the participant');
         }
 
-        return nonParticipants.length;
+        return {
+            participationId,
+            status: 'success',
+            pointsDeducted: pointsToDeduct
+        };
     }
 
-    static async rewardParticipants(participationId: any) {
+    static async rewardParticipants(participationIds: any[]) {
+        const results = [];
+
+        for (const participationId of participationIds) {
+            const result = await PointTransactionService.rewardSingleParticipant(participationId);
+            results.push(result);
+        }
+
+        return results;
+    }
+
+    private static async rewardSingleParticipant(participationId: any) {
         const participation = await Participation.findById(participationId);
         if (!participation) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Participation not found');
@@ -90,13 +113,29 @@ export class PointTransactionService {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Participation ID is not valid for reward');
         }
 
-        const program = await Program.findById(participation.programId);
+        const program = await Program.findById(participation.programId).populate('categoryId');
         if (!program) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
         }
 
         const pointsToAdd = Math.abs(program.point as number);
 
+        if (program.isAttendanceCategory()) {
+            await PointTransactionService.rewardForAttendance(participationId, participation, pointsToAdd, program);
+        } else if (program.isEvidenceCategory()) {
+            await PointTransactionService.rewardForEvidence(participationId, participation, pointsToAdd, program);
+        } else {
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid program category for rewarding points');
+        }
+
+        return {
+            participationId,
+            status: 'success',
+            pointsAdded: pointsToAdd
+        };
+    }
+
+    private static async rewardForAttendance(participationId: any, participation: any, pointsToAdd: number, program: any) {
         const pointTransactionReq: IPointTransaction = {
             participationId: participationId,
             point: pointsToAdd,
@@ -121,9 +160,44 @@ export class PointTransactionService {
         } else {
             throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'User ID not found for the participant');
         }
-
-        return participants.length;
     }
 
+    private static async rewardForEvidence(participationId: any, participation: any, pointsToAdd: number, program: any) {
+        const evidences = await Evidence.find({ participationId });
 
+        if (evidences.length === 0) {
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'No evidences found for this participation');
+        }
+
+        const allEvidencesApproved = evidences.every(evidence => evidence.status === 'approved');
+
+        if (!allEvidencesApproved) {
+            throw new ApiError(StatusCodes.BAD_REQUEST, 'Not all evidences are approved for this participation');
+        }
+
+        const pointTransactionReq: IPointTransaction = {
+            participationId: participationId,
+            point: pointsToAdd,
+            type: 'add',
+            description: `Added ${pointsToAdd} points for submitting evidence in program ${program.programName}`
+        };
+
+        await PointTransaction.create(pointTransactionReq);
+
+        if (participation.userId) {
+            const userUpdateResult = await User.updateOne(
+                { _id: participation.userId },
+                { $inc: { point: pointsToAdd } }
+            );
+
+            if (userUpdateResult.modifiedCount === 0) {
+                throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'Failed to add points to the user');
+            }
+
+            participation.pointsRewarded = true;
+            await participation.save();
+        } else {
+            throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'User ID not found for the participant');
+        }
+    }
 }
