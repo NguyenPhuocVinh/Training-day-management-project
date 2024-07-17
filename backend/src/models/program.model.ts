@@ -7,6 +7,7 @@ interface ProgramDocument extends IProgram, Document {
     checkRegistrationDates(): boolean;
     isAttendanceCategory(): boolean;
     isEvidenceCategory(): boolean;
+    isQuizCategory(): boolean;
 }
 
 const ProgramSchema = new Schema<ProgramDocument>({
@@ -96,6 +97,10 @@ ProgramSchema.method('isAttendanceCategory', function isAttendanceCategory(this:
 
 ProgramSchema.method('isEvidenceCategory', function isEvidenceCategory(this: ProgramDocument) {
     return this.categoryId && this.categoryId.categoryName === 'propose';
+});
+
+ProgramSchema.method('isQuizCategory', function isQuizCategory(this: ProgramDocument) {
+    return this.categoryId && this.categoryId.categoryName === 'quiz';
 });
 
 export const Program = model<ProgramDocument>('Program', ProgramSchema);

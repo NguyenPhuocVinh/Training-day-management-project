@@ -10,6 +10,8 @@ import participationRouter from './participation.route'
 import attendanceRouter from './attendance.route'
 import pointTransactionRouter from './point_transcaction.route'
 import evidenceRouter from './evidence.route'
+import quizRouter from './quiz.route'
+import userQuizRoute from './user_quiz.route'
 import { authMiddleware } from '../../middlewares/auth.middleware'
 const apiRouter = express.Router()
 
@@ -24,5 +26,7 @@ apiRouter.use('/participation', authMiddleware, participationRouter)
 apiRouter.use('/attendance', authMiddleware, attendanceRouter)
 apiRouter.use('/point-transaction', authMiddleware, pointTransactionRouter)
 apiRouter.use('/evidence', authMiddleware, evidenceRouter)
+apiRouter.use('/quiz', authMiddleware, quizRouter)
+apiRouter.use('/user-quiz', authMiddleware, userQuizRoute)
 
 export default apiRouter

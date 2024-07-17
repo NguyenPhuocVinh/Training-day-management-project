@@ -102,8 +102,36 @@ interface IProgram {
 // * Quiz
 interface IQuiz {
     quizName: string
-    time: Time
+    programId: any
+    duration: Number
+    quantityQuestion: Number
+    requiredCorrectAnswer: Number
+    status: string
+    startTime: Date
+    endTime: Date
 }
+
+interface IQuestion {
+    quizId: any
+    question: string
+    imageQuestion?: string
+    answers: string[]
+    correctAnswer: Number
+}
+
+interface IUserQuiz {
+    participationId: any
+    quizId: any
+    completed: Date
+    correctAnswer: Number,
+}
+
+interface IUserAnswer {
+    userQuizId: any
+    questionId: any
+    answer: Number
+}
+
 
 // * Participation
 interface IParticipation {

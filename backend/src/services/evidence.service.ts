@@ -28,7 +28,7 @@ export class EvidenceService {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Program not found');
         }
 
-        if (program.startDate > new Date()) {
+        if (program?.startDate > new Date()) {
             throw new ApiError(StatusCodes.BAD_REQUEST, 'Program has not started yet');
         }
 
