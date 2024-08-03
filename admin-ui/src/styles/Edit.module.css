@@ -1,0 +1,139 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.saveButtonContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px; /* Khoảng cách giữa nút save và nội dung */
+}
+
+.saveButton {
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px; /* Khoảng cách giữa nút save và các phần tử khác */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Thêm bóng cho nút */
+    position: sticky;
+    top: 0; /* Đảm bảo nút luôn hiển thị ở trên cùng */
+    z-index: 1000; /* Đảm bảo nút luôn nằm trên các phần tử khác */
+}
+
+.saveButton:hover {
+    background-color: #005bb5;
+}
+
+.content {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.imageContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.image {
+    width: 450px;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fileInput {
+    margin-top: 10px;
+}
+
+.details {
+    flex: 1;
+    border-radius: 8px;
+    /* padding: 20px; */
+    /* border: 1px solid #ddd; */
+    position: relative; /* Để đặt các phần tử điều chỉnh được */
+}
+
+.infoTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.infoTable td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    position: relative; /* Để căn chỉnh icon chỉnh sửa */
+}
+
+.infoTable td:first-child {
+    font-weight: 400;
+    width: 30%; /* Đảm bảo độ rộng cố định */
+}
+
+.infoTable tr:last-child td {
+    border-bottom: none;
+}
+
+/* Để xử lý chỉnh sửa các trường */
+.editField {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.editField input,
+.editField select,
+.editField textarea {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-top: 4px;
+    box-sizing: border-box; /* Đảm bảo padding không thay đổi kích thước phần tử */
+}
+
+.editButton {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #0070f3;
+    font-size: 16px;
+    position: absolute;
+    right: 10px; /* Đặt icon chỉnh sửa ở góc phải */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Khi đang trong chế độ chỉnh sửa */
+.editing .infoTable td {
+    background-color: #f9f9f9;
+}
+
+.editing .infoTable input,
+.editing .infoTable select,
+.editing .infoTable textarea {
+    display: block;
+    width: calc(100% - 40px); /* Đảm bảo các phần tử chỉnh sửa không quá rộng */
+    margin: 4px 10px; /* Cân chỉnh khoảng cách và lề */
+}

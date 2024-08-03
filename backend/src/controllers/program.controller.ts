@@ -19,6 +19,10 @@ export class ProgramController {
                 if (!createProgramRequest) {
                     throw new ApiError(StatusCodes.BAD_REQUEST, 'Invalid request');
                 }
+                const { programName, categoryId, description, startDate, registerDate, endRegisterDate } = createProgramRequest;
+                if (!programName || !categoryId || !description || !startDate || !registerDate || !endRegisterDate) {
+                    throw new ApiError(StatusCodes.BAD_REQUEST, 'Program name is required');
+                }
                 const { path: imagePath } = req.file;
 
 
@@ -34,6 +38,7 @@ export class ProgramController {
                 fs.unlinkSync(imagePath);
                 res.status(StatusCodes.CREATED).json({ program });
             } catch (error: any) {
+                console.log(error);
                 res.status(error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
             }
         });
@@ -46,7 +51,7 @@ export class ProgramController {
             }
 
             try {
-                const programId = req.query.programId as string;
+                const programId = req.params.programId as string;
                 const updateProgramRequest: IProgram = req.body;
                 const newImage = req.file ? req.file.path : null;
                 if (newImage) {
@@ -105,7 +110,7 @@ export class ProgramController {
 
     static async getProgramById(req: Request, res: Response) {
         try {
-            const programId = req.query.programId as string;
+            const programId = req.params.programId as string;
             const program = await ProgramService.getProgramById(programId);
             res.status(StatusCodes.OK).json({ program });
         } catch (error: any) {

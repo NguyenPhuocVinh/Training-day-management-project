@@ -24,7 +24,7 @@ export class AdminService {
     }
 
     static async adminLogin({ email, password }: LoginAdminReqBody) {
-        const admin = await Admin.findOne({ email })
+        const admin = await Admin.findOne({ email }).select('+password')
         if (!admin) throw new ApiError(StatusCodes.NOT_FOUND, 'Wrong email')
         if (admin.roleId === null) {
             throw new ApiError(StatusCodes.UNAUTHORIZED, 'You are not allowed to login')

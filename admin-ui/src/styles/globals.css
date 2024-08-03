@@ -1,0 +1,27 @@
+/* styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 0, 0, 0; /* Màu chữ đen */
+    --background-rgb: 255, 255, 255; /* Nền trắng */
+    --border-color: #dcdcdc; /* Màu đường viền */
+}
+
+[data-theme="dark"] {
+    --foreground-rgb: 255, 255, 255; /* Màu chữ trắng */
+    --background-rgb: 0, 0, 0; /* Nền đen */
+    --border-color: #444444; /* Màu đường viền trong chế độ tối */
+}
+
+body {
+    color: rgb(var(--foreground-rgb)); /* Màu chữ */
+    background-color: rgb(var(--background-rgb)); /* Màu nền */
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}

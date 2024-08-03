@@ -54,10 +54,22 @@ export class ProgramService {
 
     static async getPrograms() {
         return await Program.find()
+            .populate({
+                path: 'adminId',
+                populate: { path: 'facilityId', select: 'facilityName' }
+            })
+            .populate('categoryId', 'categoryName')
+            .lean()
+            .exec();
     }
 
     static async getProgramById(programId: string) {
-        return await Program.findById(programId)
+        return await Program.findById(programId).populate({
+            path: 'adminId',
+            populate: { path: 'facilityId', select: 'facilityName' }
+        })
+            .populate('categoryId', 'categoryName')
+            .lean()
+            .exec();
     }
-
 }

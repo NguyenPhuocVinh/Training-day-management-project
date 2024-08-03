@@ -5,7 +5,7 @@ import { Permissions } from '../../constants'
 
 const categoryRouter = express.Router()
 
-categoryRouter.get('/get-categories', CategoryController.getCategories)
+categoryRouter.get('/', CategoryController.getCategories)
 categoryRouter.get('/get-category-by-id', CategoryController.getCategoryById)
 categoryRouter.post('/create', checkPermission(Permissions.CREATE_CATEGORY), CategoryController.create)
 categoryRouter.put('/update', checkPermission(Permissions.UPDATE_CATEGORY), CategoryController.update)

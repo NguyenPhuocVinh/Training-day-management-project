@@ -1,0 +1,124 @@
+.container {
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.buttonGroup {
+    display: flex;
+    gap: 10px;
+}
+
+.buttonGroup button {
+    padding: 8px 16px;
+    border: none;
+    background-color: #0070f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.buttonGroup button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown button {
+    background-color: #0070f3;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dropdownContent {
+    display: none;
+    position: absolute;
+    background-color: #f0f0f0;
+    min-width: 140px;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdownContent button {
+    color: black;
+    padding: 10px 14px;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 1;
+}
+
+.dropdownContent button.disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.dropdownContent button:hover:not(.disabled) {
+    background-color: #e0e0e0;
+}
+
+.dropdown:hover .dropdownContent {
+    display: block;
+}
+
+.dropdown .arrow {
+    margin-left: auto;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.checkbox {
+    margin-right: 10px;
+}
+
+.error {
+    color: red;
+    margin-bottom: 10px;
+}

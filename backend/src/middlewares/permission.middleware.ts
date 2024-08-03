@@ -7,7 +7,6 @@ export const checkPermission = (requiredPermission: string) => {
         try {
             const adminRoleId = req.user.roleId
             const role = await Role.findById(adminRoleId).populate('permissions')
-            console.log(role)
 
             if (!role) {
                 return res.status(StatusCodes.FORBIDDEN).json({ message: 'Role denied' });

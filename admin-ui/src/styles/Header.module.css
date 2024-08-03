@@ -1,0 +1,75 @@
+/* styles/Header.module.css */
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 2px solid var(--border-color); /* Đường viền dưới header */
+    height: 60px;
+    position: fixed; /* Fix header ở trên cùng */
+    top: 0; /* Cố định header ở trên cùng */
+    width: 100%; /* Đảm bảo header chiếm toàn bộ chiều rộng */
+    background-color: rgb(var(--background-rgb)); /* Nền của header */
+    z-index: 1000; /* Đặt z-index cao để header không bị che */
+}
+
+.leftSection,
+.rightSection {
+    display: flex;
+    align-items: center;
+}
+
+.leftSection {
+    flex: 1;
+}
+
+.rightSection {
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: inherit;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.menuIcon,
+.icon {
+    font-size: 1.25rem;
+    color: inherit;
+    margin-left: 15px;
+}
+
+.themeToggleButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: inherit;
+    margin-left: 15px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .headerContainer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .leftSection,
+    .rightSection {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .logo {
+        margin-right: 0;
+    }
+
+    .rightSection {
+        justify-content: flex-start;
+    }
+}

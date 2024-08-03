@@ -107,24 +107,19 @@ export class ParticipationService {
     }
 
     static async getNonParticipants(programId: any) {
-        console.log(programId);
         const registeredUsers = await Participation.find({ programId, status: 'success' }).select('userId');
 
-        // Lấy danh sách người dùng đã đăng ký nhưng không tham gia
         const nonParticipants = await Promise.all(registeredUsers.map(async (participation) => {
             const userId = participation.userId;
 
-            // Lấy thông tin người dùng từ User model, loại bỏ password và point
             const userData = await User.findById(userId).select('-password -point').exec();
 
             if (!userData) {
                 throw new Error(`User with ID ${userId} not found`);
             }
 
-            // Giả sử có trường attendanceRecord chứa thông tin tham gia
             const attendanceRecord = userData.attendanceRecord;
 
-            // Kiểm tra điều kiện không tham gia
             if (!attendanceRecord || (attendanceRecord.checkIn && !attendanceRecord.checkOut)) {
                 return {
                     participationId: participation._id,
@@ -133,7 +128,6 @@ export class ParticipationService {
                 }
                 // const isNonParticipant = !attendanceRecord || (attendanceRecord.checkIn && !attendanceRecord.checkOut);
 
-                // // Trả về đối tượng người dùng với thêm trường participationId
                 // return {
                 //     participationId: participation._id,
                 //     user: userData,
@@ -202,6 +196,5 @@ export class ParticipationService {
                 user: participation.userId
             }));
     }
-
 
 }

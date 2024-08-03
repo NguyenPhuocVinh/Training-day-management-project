@@ -16,11 +16,13 @@ const AdminSchema = new Schema<AdminDocument>({
         validate: {
             validator: (value: string) => validator.isEmail(value),
             message: 'Invalid email format'
-        }
+        },
+        select: false
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select: false
     },
     facilityId: {
         type: mongoose.Schema.Types.ObjectId,

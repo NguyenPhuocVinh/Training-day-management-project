@@ -1,0 +1,92 @@
+/* components/Toast.module.css */
+.toast-container {
+    position: fixed;
+    bottom: 20px; /* Khoảng cách từ dưới lên */
+    right: 20px; /* Khoảng cách từ phải sang */
+    display: flex;
+    flex-direction: column; /* Xếp theo cột nếu có nhiều toast */
+    align-items: flex-end; /* Căn chỉnh các toast về phía bên phải */
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 16px;
+    min-width: 300px;
+    max-width: 400px;
+    border-left: 4px solid;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: relative;
+    pointer-events: all;
+    margin-bottom: 10px; /* Khoảng cách giữa các toast nếu có nhiều */
+    animation: slideIn ease 0.3s, fadeOut ease 0.3s 2.7s forwards; /* Adjusted timings */
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(50px); /* Đưa vào từ dưới lên */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        transform: translateY(50px); /* Đưa ra từ dưới lên */
+    }
+}
+
+.toast--success {
+    border-color: #47d864;
+}
+
+.toast--info {
+    border-color: #2f86eb;
+}
+
+.toast--warning {
+    border-color: #ffc021;
+}
+
+.toast--error {
+    border-color: #ff623d;
+}
+
+.toast__icon {
+    font-size: 24px;
+    padding: 0 16px;
+    color: currentColor;
+}
+
+.toast__body {
+    flex-grow: 1;
+}
+
+.toast__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.toast__msg {
+    font-size: 14px;
+    color: #888;
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.toast__close {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    padding: 0 16px;
+}

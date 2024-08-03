@@ -1,0 +1,65 @@
+/* ProgramDetail.module.css */
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.content {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px; /* Giảm khoảng cách giữa hình và chi tiết */
+}
+
+.image {
+    width: 450px; /* Kích thước lớn hơn cho hình ảnh */
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.details {
+    flex: 1;
+    border-radius: 8px;
+}
+
+.infoTable {
+    width: 100%;
+    border-collapse: collapse; /* Xóa khoảng cách giữa các ô */
+    /* Thêm đường viền cho bảng */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Ẩn phần nội dung vượt quá khung bảng */
+}
+
+.infoTable td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* Thêm đường viền dưới các ô */
+}
+
+.infoTable td:first-child {
+    font-weight: 400; /* Làm đậm văn bản trong ô đầu tiên */
+}
+
+.infoTable tr:last-child td {
+    border-bottom: none; /* Xóa đường viền dưới hàng cuối cùng */
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+}
